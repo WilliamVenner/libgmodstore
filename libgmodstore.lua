@@ -3,17 +3,6 @@ if (libgmodstore) then
 		libgmodstore.Menu:Close()
 	end
 end
-libgmodstore = {}
-
-function libgmodstore:print(msg,type)
-	if (type == "error" or type == "bad") then
-		MsgC(Color(255,0,0),"[libgmodstore] ",Color(255,255,255),msg .. "\n")
-	elseif (type == "success" or type == "good") then
-		MsgC(Color(0,255,0),"[libgmodstore] ",Color(255,255,255),msg .. "\n")
-	else
-		MsgC(Color(0,255,255),"[libgmodstore] ",Color(255,255,255),msg .. "\n")
-	end
-end
 
 -- https://github.com/stuartpb/tvtropes-lua/blob/master/urlencode.lua
 local function urlencode(str)
@@ -150,24 +139,6 @@ if (SERVER) then
 		end
 	end)
 
-	hook.Remove("PlayerInitialSpawn","libgmodstore_fetchwhenready")
-	local waiting = false
-	function libgmodstore:FetchWhenReady(...)
-		if (#player.GetHumans() > 0) then
-			http.Fetch(...)
-		else
-			libgmodstore:print("Waiting for a player to join so we can check for script updates...")
-			local vararg = {...}
-			waiting = true
-			hook.Add("PlayerInitialSpawn","libgmodstore_fetchwhenready",function()
-				timer.Simple(0,function()
-					http.Fetch(unpack(vararg))
-				end)
-				hook.Remove("PlayerInitialSpawn","libgmodstore_fetchwhenready")
-			end)
-		end
-	end
-
 	function libgmodstore:InitScript(script_id, script_name, options)
 		if (not tonumber(script_id) or (script_name or ""):Trim():len() == 0) then
 			return false
@@ -179,7 +150,7 @@ if (SERVER) then
 			metadata    = {}
 		}
 		if (options.version ~= nil) then
-			libgmodstore:FetchWhenReady("https://lib.gmodsto.re/api/update-check.php?script_id=" .. urlencode(script_id) .. "&version=" .. urlencode(options.version), function(body,size,headers,code)
+			http.Fetch("https://lib.gmodsto.re/api/update-check.php?script_id=" .. urlencode(script_id) .. "&version=" .. urlencode(options.version), function(body,size,headers,code)
 				if (code ~= 200) then
 					libgmodstore:print("[2] Error while checking for updates on script " .. script_id .. ": HTTP " .. code, "bad")
 					libgmodstore.scripts[script_id].metadata.outdated = "ERROR"

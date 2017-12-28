@@ -379,7 +379,7 @@ Please enter the authorisation code below]]
 				m.Tabs.ScriptUpdates.List:AddColumn("ID")
 				m.Tabs.ScriptUpdates.List:AddColumn("Name")
 				m.Tabs.ScriptUpdates.List:AddColumn("Outdated")
-				m.Tabs.ScriptUpdates.List:AddColumn("Version")
+				m.Tabs.ScriptUpdates.List:AddColumn("Installed")
 				m.Tabs.ScriptUpdates.List:Dock(LEFT)
 				function m.Tabs.ScriptUpdates.List:OnRowSelected(_,row)
 					m.Tabs.ScriptUpdates.ScriptHTML:OpenURL("https://gmodstore.com/scripts/view/" .. row.script_id .. "/versions")

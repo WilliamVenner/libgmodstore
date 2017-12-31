@@ -1,6 +1,12 @@
+local DEBUGGING = false
 if (libgmodstore) then
-	if (IsValid(libgmodstore.Menu)) then
-		libgmodstore.Menu:Close()
+	if (DEBUGGING) then
+		if (IsValid(libgmodstore.Menu)) then
+			libgmodstore.Menu:Close()
+		end
+	else
+		-- We don't want to be running multiple times if we've already initialised
+		return
 	end
 end
 

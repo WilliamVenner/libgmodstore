@@ -1,3 +1,8 @@
+local DEBUGGING = false
+if (libgmodstore and not DEBUGGING) then
+	-- We don't want to be running multiple times if we've already initialised
+	return
+end
 libgmodstore = {}
 
 function libgmodstore:print(msg,type)
